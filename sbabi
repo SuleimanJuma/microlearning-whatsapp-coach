@@ -1,0 +1,111 @@
+MONGODB MICROLEARNING STRUCTURE
+
+{
+    "users": {
+        "_id": "ObjectId",
+        "phone_number": "String",
+        "current_lesson": "ObjectId or null",
+        "created_at": "ISODate"
+    },
+    "lessons": {
+        "_id": "ObjectId",
+        "title": "String",
+        "content": "String",
+        "track": "String",
+        "created_at": "ISODate"
+    },
+    "user_progress": {
+        "_id": "ObjectId",
+        "user_id": "ObjectId",
+        "lesson_id": "ObjectId",
+        "completed_at": "ISODate"
+    }
+}
+
+
+SUPABASE MICROLEARNING TABLES
+
+-- Create users table
+create table if not exists users (
+  id uuid primary key default uuid_generate_v4(),
+  phone_number text not null,
+  current_lesson uuid,
+  created_at timestamp with time zone default now()
+);
+
+-- Create lessons table
+create table if not exists lessons (
+  id uuid primary key default uuid_generate_v4(),
+  title text not null,
+  content text not null,
+  track text not null,
+  created_at timestamp with time zone default now()
+);
+
+-- Create user_progress table
+create table if not exists user_progress (
+  id uuid primary key default uuid_generate_v4(),
+  user_id uuid references users(id) on delete cascade,
+  lesson_id uuid references lessons(id) on delete cascade,
+  completed_at timestamp with time zone default now()
+);
+
+}
+
+SEED LESSONS
+
+title,content,track
+Greetings,"👋 Hi! In English, we say 'Hello' or 'Hi' to greet people.",English Basics
+Introductions,🤝 “My name is John.” Try saying: 'My name is ____.',English Basics
+Asking Questions,❓ 'What is your name?' is how we ask someone's name.,English Basics
+Numbers 1–5,"1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ - Say: “One, Two, Three, Four, Five.”",English Basics
+Days of the Week,🗓️ Monday to Sunday are the days of the week.,English Basics
+Simple Sentences,🗣️ 'I am happy.' 'She is kind.' Try your own!,English Basics
+Expressing Thanks,🙏 Say 'Thank you' or 'Thanks' to show gratitude.,English Basics
+Directions,"🧭 'Go left', 'Turn right', 'Straight ahead'",English Basics
+
+
+Final Breakdown: Supabase Data Structure for Microlearning Coach
+📁 1. users Table
+id (UUID)	phone_number	current_lesson (UUID)	created_at
+423a...f73e	+27761234567	b512...c92a	2025-07-01 20:00:00
+
+Represents a WhatsApp learner
+
+current_lesson is a foreign key to lessons.id (can be null if new)
+
+📁 2. lessons Table
+id (UUID)	title	content	track	created_at
+b512...c92a	Greetings	👋 Hi! In English, we say "Hello" or "Hi" to greet people.	English Basics	2025-07-01 19:55:00
+a932...d83c	Asking Questions	❓ "What is your name?" is how we ask someone's name.	English Basics	2025-07-01 19:55:00
+...	...	...	...	...
+
+Each lesson is a micro-unit that can be sent over WhatsApp
+
+track allows grouping by skill level or subject (e.g., English Basics)
+
+📁 3. user_progress Table
+id (UUID)	user_id (UUID)	lesson_id (UUID)	completed_at
+f834...a80c	423a...f73e	b512...c92a	2025-07-01 20:15:00
+
+Tracks which user has completed which lesson
+
+You can query this to show lesson progress on a web dashboard or WhatsApp
+
+🧩 Relationships Overview
+plaintext
+Copy
+Edit
+users (1) ──► (M) user_progress (M) ◄── (1) lessons
+         └────► current_lesson (FK)
+One user can complete many lessons
+
+One lesson can be completed by many users
+
+user.current_lesson shows what they're currently doing
+
+📝 Summary
+
+We have 3 main tables: users, lessons, and user_progress. Each user has a phone number and can be linked to their current lesson. Lessons are short, WhatsApp-friendly texts. Every time a user completes a lesson, we store that in user_progress. This lets us track progress, recommend new lessons, and personalize learning.
+Time Expressions,⏰ Ask 'What time is it?' Reply: 'It’s 2 o’clock.',English Basics
+Colors,"🎨 Red, Blue, Green, Yellow – What's your favorite color?",English Basics
