@@ -1,0 +1,21 @@
+{
+    "users": {
+        "_id": "ObjectId",
+        "phone_number": "String",
+        "current_lesson": "ObjectId or null",
+        "created_at": "ISODate"
+    },
+    "lessons": {
+        "_id": "ObjectId",
+        "title": "String",
+        "content": "String",
+        "track": "String",
+        "created_at": "ISODate"
+    },
+    "user_progress": {
+        "_id": "ObjectId",
+        "user_id": "ObjectId",
+        "lesson_id": "ObjectId",
+        "completed_at": "ISODate"
+    }
+}
